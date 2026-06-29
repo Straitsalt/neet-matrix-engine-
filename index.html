@@ -20,7 +20,7 @@
         .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         input, select, textarea { padding: 10px; background: #0B0F19; border: 1px solid #374151; color: white; border-radius: 8px; }
         
-        /* Notebook Point 4: Interactive Blueprint Box */
+        /* Interactive Blueprint Box */
         .blueprint-box { 
             border: 2px solid #E2E8F0; background: #111827; max-width: 400px; margin: 20px auto; 
             padding: 20px; border-radius: 8px; position: relative; text-align: left; cursor: pointer;
@@ -31,6 +31,9 @@
         .features-badge { background: #2563EB; color: white; padding: 4px 8px; font-size: 11px; border-radius: 4px; display: inline-block; margin-top: 10px; font-weight: bold;}
         .tagline { color: #A78BFA; font-style: italic; margin-top: 15px; font-size: 16px; }
         .signature { text-align: right; color: #94A3B8; font-size: 13px; margin-top: 10px; }
+
+        /* Streak Element */
+        .streak-banner { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 18px; font-weight: bold; color: #F59E0B; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
 
         .options-grid { display: flex; flex-direction: column; gap: 10px; }
         .option-btn { background: #1F2937; border: 1px solid #374151; color: #E2E8F0; padding: 14px; border-radius: 8px; text-align: left; cursor: pointer; width: 100%; }
@@ -44,16 +47,24 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #1F2937; font-size: 13px; }
         th { background: #1F2937; color: #94A3B8; }
+        
+        /* Split layout for Arena */
+        .arena-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .arena-layout { grid-template-columns: 3fr 2fr; } }
+
+        /* Shared Library Grid Layout */
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
+        .book-card { background: #1F2937; padding: 15px; border-radius: 8px; border: 1px solid #374151; display: flex; flex-direction: column; justify-content: space-between; }
+        .admin-ledger { background: #0B0F19; border: 1px solid #EF4444; padding: 15px; border-radius: 8px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- 8) MULTI-USER LOGIN MODULE -->
     <div id="authScreen" class="workspace-layout" style="margin-top: 80px; max-width: 400px;">
         <div class="card">
-            <h3 style="text-align: center; color: #38BDF8; margin-top: 0;">🔐 NEET PREP PORTAL</h3>
+            <h3 style="text-align: center; color: #38BDF8; margin-top: 0;">🔐 NEET PREP ENGINE</h3>
             <div class="form-group"><label>Username</label><input type="text" id="authUser" placeholder="Enter username"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="authPass" placeholder="Enter password"></div>
+            <div class="form-group"><label>Password (Strong Required)</label><input type="password" id="authPass" placeholder="Enter password"></div>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button class="btn btn-primary" style="flex: 1;" onclick="handleAuth('login')">Log In</button>
                 <button class="btn btn-accent" style="flex: 1;" onclick="handleAuth('signup')">Sign Up</button>
@@ -62,22 +73,25 @@
         </div>
     </div>
 
-    <!-- MAIN INTERFACE CONTAINER -->
     <div id="appContainer" class="hidden">
         <div class="nav-bar">
             <h2 id="userGreeting" style="margin:0; font-size:18px; color:#38BDF8;">⚡ Neet Prep</h2>
             <div>
                 <button class="btn btn-primary" onclick="switchView('homePage')">🏠 Home</button>
                 <button class="btn btn-success" onclick="switchView('practiceArena')">🚀 Arena</button>
+                <button class="btn btn-accent" onclick="switchView('libraryHub')">📚 Book Library</button>
                 <button class="btn btn-danger" style="padding: 6px 10px;" onclick="logout()">Logout</button>
             </div>
         </div>
 
         <div class="workspace-layout">
-            <!-- SCREEN 1: THE HOME SCREEN -->
+            
             <div id="homePage" class="view-panel">
+                <div class="streak-banner">
+                    <span>🔥 Daily Study Streak:</span>
+                    <span id="streakCount">1 Day</span>
+                </div>
                 
-                <!-- 4) BLUEPRINT HOME PAGE CONTAINER FROM IMAGE -->
                 <div class="blueprint-box" onclick="revealFeatures()">
                     <div class="blueprint-title">Neet</div>
                     <div>homepage, <span class="features-badge">👉 Click Features</span></div>
@@ -85,11 +99,9 @@
                     <div class="signature">~Piyush</div>
                 </div>
 
-                <!-- HIDDEN FEATURES MODULE (Unlocks on click) -->
                 <div id="featuresModule" class="hidden">
-                    <!-- 2) SYLLABUS TRACKING COUNTERS -->
                     <div class="card" style="margin-bottom: 20px; border-color: #3B82F6;">
-                        <h4>📋 1) Syllabus Tracker</h4>
+                        <h4>📋 1) Syllabus Tracker Breakdown</h4>
                         <div class="tracker-grid">
                             <div class="subject-box" style="border-top: 4px solid #38BDF8;">
                                 <span style="color:#38BDF8; font-weight:bold;">Phy</span>
@@ -106,196 +118,47 @@
                         </div>
                     </div>
 
-                    <!-- 6) LOCAL REFERENCE MODULE HUB -->
-                    <div class="card" style="margin-bottom: 20px; border-color: #EC4899;">
-                        <h4>📁 2) Reference Document Desk ("Add" Option)</h4>
-                        <div class="form-group">
-                            <label>Store Reference Materials & PDFs</label>
-                            <input type="file" id="pdfUploadInput" accept=".pdf" onchange="addPdfRegistry()">
-                        </div>
-                        <div id="pdfList" style="display:flex; flex-direction:column; gap:6px; margin-top:10px;"></div>
-                    </div>
-
-                    <!-- 3) EDITABLE HISTORY STATS LOG SYSTEM -->
                     <div class="card" style="border-color: #10B981;">
-                        <h4>📊 3) Performance Sections & Saved History Log</h4>
-                        <div id="historyTableContainer">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Section</th>
-                                        <th>Total Solved</th>
-                                        <th>Correct</th>
-                                        <th>Accuracy</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="historyLogRows">
-                                    <!-- Dynamic Rows -->
-                                </tbody>
-                            </table>
-                        </div>
+                        <h4>📊 3) Performance History Statistics Log</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Section</th>
+                                    <th>Total Solved</th>
+                                    <th>Correct</th>
+                                    <th>Accuracy</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyLogRows"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- SCREEN 2: PRACTICE ARENA -->
             <div id="practiceArena" class="view-panel hidden">
                 <div class="card" id="filterDeck">
-                    <h4>🎯 Setup Engine parameters</h4>
+                    <h4>🎯 Session Setup parameters</h4>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                         <select id="runSubject" style="flex:1;"><option>Physics</option><option>Chemistry</option><option>Biology</option></select>
                     </div>
                     <button class="btn btn-success" style="width: 100%;" onclick="startPracticeSession()">⚡ Launch Test Arena</button>
                 </div>
 
-                <div class="card hidden" id="arenaBox">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <span id="arenaMeta" style="color:#38BDF8; font-weight:bold;">Physics</span>
-                        <span id="arenaTracker">Question</span>
+                <div class="arena-layout hidden" id="arenaBox">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span id="arenaMeta" style="color:#38BDF8; font-weight:bold;">Physics</span>
+                        </div>
+                        <p id="arenaQuestionText" style="font-size:16px; font-weight:500; margin-bottom:20px;"></p>
+                        <div class="options-grid">
+                            <button id="optBtnA" class="option-btn" onclick="selectOption('A')"></button>
+                            <button id="optBtnB" class="option-btn" onclick="selectOption('B')"></button>
+                            <button id="optBtnC" class="option-btn" onclick="selectOption('C')"></button>
+                            <button id="optBtnD" class="option-btn" onclick="selectOption('D')"></button>
+                        </div>
+                        <button id="actionBtn" class="btn btn-primary" style="margin-top:20px; width:100%;" onclick="handleActionClick()">Check Answer</button>
                     </div>
-                    <p id="arenaQuestionText" style="font-size:16px; font-weight:500; margin-bottom:20px;"></p>
-                    <div class="options-grid">
-                        <button id="optBtnA" class="option-btn" onclick="selectOption('A')"></button>
-                        <button id="optBtnB" class="option-btn" onclick="selectOption('B')"></button>
-                        <button id="optBtnC" class="option-btn" onclick="selectOption('C')"></button>
-                        <button id="optBtnD" class="option-btn" onclick="selectOption('D')"></button>
-                    </div>
-                    <button id="actionBtn" class="btn btn-primary" style="margin-top:20px; width:100%;" onclick="handleActionClick()">Check Answer</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        let usersDB = JSON.parse(localStorage.getItem('neet_users_db')) || {};
-        let currentUser = localStorage.getItem('neet_current_session_user') || null;
-
-        const defaultQuestions = [
-            { subject: "Physics", question: "A projectile is thrown with an initial velocity u at an angle θ with the horizontal. What is its velocity vector at the maximum height?", options: { A: "Zero", B: "u sinθ", C: "u cosθ", D: "u" }, answerKey: "C" },
-            { subject: "Chemistry", question: "Identify the correct structural IUPAC configuration sequence for Neo-pentane.", options: { A: "2-methylbutane", B: "2,2-dimethylpropane", C: "Dimethylpropane", D: "1,1,1-trimethylethane" }, answerKey: "B" },
-            { subject: "Biology", question: "During which cellular phase sequence do identical sister chromatid structures separate cleanly?", options: { A: "Metaphase", B: "Anaphase", C: "Prophase", D: "Telophase" }, answerKey: "B" }
-        ];
-
-        function initUserSession() {
-            if (currentUser) {
-                document.getElementById('authScreen').classList.add('hidden');
-                document.getElementById('appContainer').classList.remove('hidden');
-                document.getElementById('userGreeting').innerText = `⚡ Welcome, ${currentUser.toUpperCase()}`;
-                if(!usersDB[currentUser].history) usersDB[currentUser].history = [];
-                if(!usersDB[currentUser].pdfs) usersDB[currentUser].pdfs = [];
-                renderHistory();
-                renderPdfs();
-            } else {
-                document.getElementById('authScreen').classList.remove('hidden');
-                document.getElementById('appContainer').classList.add('hidden');
-            }
-        }
-
-        function handleAuth(type) {
-            const u = document.getElementById('authUser').value.trim(), p = document.getElementById('authPass').value.trim();
-            if(!u || !p) { document.getElementById('authError').innerText = "Fill parameters."; return; }
-            if(type === 'signup') {
-                if(usersDB[u]) { document.getElementById('authError').innerText = "User configuration exists."; return; }
-                usersDB[u] = { password: p, history: [], pdfs: [] };
-                saveData();
-                alert("Account created! Log in now.");
-            } else {
-                if(!usersDB[u] || usersDB[u].password !== p) { document.getElementById('authError').innerText = "Invalid details."; return; }
-                currentUser = u; localStorage.setItem('neet_current_session_user', u);
-                initUserSession();
-            }
-        }
-
-        function logout() { localStorage.removeItem('neet_current_session_user'); currentUser = null; initUserSession(); }
-        function saveData() { localStorage.setItem('neet_users_db', JSON.stringify(usersDB)); }
-        function switchView(id) { document.querySelectorAll('.view-panel').forEach(v => v.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
-
-        // 4) REVEAL HIDDEN REQS ON CLICKING FEATURES
-        function revealFeatures() {
-            document.getElementById('featuresModule').classList.toggle('hidden');
-        }
-
-        // 6) ADD PDF FUNCTIONALITY
-        function addPdfRegistry() {
-            const input = document.getElementById('pdfUploadInput');
-            if(!input.files.length) return;
-            const filename = input.files[0].name;
-            usersDB[currentUser].pdfs.push(filename);
-            saveData(); renderPdfs();
-        }
-
-        function renderPdfs() {
-            const container = document.getElementById('pdfList'); container.innerHTML = '';
-            usersDB[currentUser].pdfs.forEach((pdf, index) => {
-                container.innerHTML += `<div style="background:#1F2937; padding:8px 12px; border-radius:6px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>📄 ${pdf}</span>
-                    <button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="deletePdf(${index})">Remove</button>
-                </div>`;
-            });
-        }
-        function deletePdf(idx) { usersDB[currentUser].pdfs.splice(idx, 1); saveData(); renderPdfs(); }
-
-        // 3) RENDER & EDIT SYSTEM HISTORY LOG
-        function renderHistory() {
-            const tbody = document.getElementById('historyLogRows'); tbody.innerHTML = '';
-            usersDB[currentUser].history.forEach((row, index) => {
-                tbody.innerHTML += `<tr>
-                    <td><strong>${row.subject}</strong></td>
-                    <td><input type="number" style="width:60px; padding:4px;" value="${row.total}" onchange="editHistory(${index}, 'total', this.value)"></td>
-                    <td><input type="number" style="width:60px; padding:4px;" value="${row.correct}" onchange="editHistory(${index}, 'correct', this.value)"></td>
-                    <td id="acc-${index}">${row.accuracy}%</td>
-                    <td><button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteHistory(${index})">Remove</button></td>
-                </tr>`;
-            });
-        }
-
-        function editHistory(index, field, value) {
-            let item = usersDB[currentUser].history[index];
-            item[field] = parseInt(value) || 0;
-            item.accuracy = item.total > 0 ? Math.round((item.correct / item.total) * 100) : 0;
-            saveData(); document.getElementById(`acc-${index}`).innerText = `${item.accuracy}%`;
-        }
-        function deleteHistory(idx) { usersDB[currentUser].history.splice(idx, 1); saveData(); renderHistory(); }
-
-        // ARENA GENERATOR LOGIC
-        let activeQ = null, selectedAnswer = "", isAnswerChecked = false;
-        function startPracticeSession() {
-            const sub = document.getElementById('runSubject').value;
-            constpool = defaultQuestions.filter(q => q.subject === sub);
-            activeQ = constpool[Math.floor(Math.random() * constpool.length)];
-            selectedAnswer = ""; isAnswerChecked = false; resetOptionStyles();
-            document.getElementById('filterDeck').classList.add('hidden'); document.getElementById('arenaBox').classList.remove('hidden');
-            document.getElementById('arenaMeta').innerText = activeQ.subject.toUpperCase();
-            document.getElementById('arenaQuestionText').innerText = activeQ.question;
-            ['A','B','C','D'].forEach(l => document.getElementById(`optBtn${l}`).innerText = `${l}) ${activeQ.options[l]}`);
-            document.getElementById('actionBtn').innerText = "Check Answer";
-        }
-
-        function selectOption(letter) { if (isAnswerChecked) return; selectedAnswer = letter; resetOptionStyles(); document.getElementById(`optBtn${letter}`).classList.add('selected'); }
-        function resetOptionStyles() { ['A','B','C','D'].forEach(l => document.getElementById(`optBtn${l}`).className = "option-btn"); }
-
-        function handleActionClick() {
-            if(!isAnswerChecked) {
-                if(!selectedAnswer) { alert("Select an option."); return; }
-                isAnswerChecked = true;
-                const isCorrect = (selectedAnswer === activeQ.answerKey);
-                document.getElementById(`optBtn${selectedAnswer}`).classList.add(isCorrect ? 'correct-reveal' : 'wrong-reveal');
-                document.getElementById(`optBtn${activeQ.answerKey}`).classList.add('correct-reveal');
-                
-                // Save Result inside History Structure
-                usersDB[currentUser].history.push({
-                    subject: activeQ.subject, total: 1, correct: isCorrect ? 1 : 0, accuracy: isCorrect ? 100 : 0
-                });
-                saveData(); renderHistory();
-                document.getElementById('actionBtn').innerText = "Finish Session";
-            } else {
-                document.getElementById('arenaBox').classList.add('hidden'); document.getElementById('filterDeck').classList.remove('hidden');
-                switchView('homePage');
-            }
-        }
-
-        window.onload = initUserSession;
-    </script>
-</body>
-</html>
+                    <div class="card" style="display: flex; flex-direction: column;">
+                        <h4 style="color: #F59E0B; border-color: rgba(245, 158, 11,
