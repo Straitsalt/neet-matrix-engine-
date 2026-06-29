@@ -3,242 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shadow Leveling Engine</title>
+    <title>Matrix Face Analytics</title>
     <style>
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #03050A; color: #E2E8F0; }
-        .nav-bar { background: #0A0D16; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #A855F7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.2); }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #04060E; color: #E2E8F0; }
+        .nav-bar { background: #0A0E1A; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #06B6D4; box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
         .workspace { padding: 20px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: #0A0D16; padding: 20px; border-radius: 12px; border: 1px solid #1F2937; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        h3, h4 { margin-top: 0; letter-spacing: 0.5px; margin-bottom: 10px; }
-        .neon-purple { color: #C084FC; text-shadow: 0 0 8px rgba(168, 85, 247, 0.4); }
-        .neon-amber { color: #FBBF24; text-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+        .card { background: #0A0E1A; padding: 20px; border-radius: 12px; border: 1px solid #1F2937; }
+        h3, h4 { margin-top: 0; letter-spacing: 0.5px; }
         .neon-cyan { color: #22D3EE; text-shadow: 0 0 8px rgba(34, 211, 238, 0.4); }
-        .btn { border: none; padding: 12px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; transition: all 0.2s; }
-        .btn-purple { background: #8B5CF6; box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
-        .btn-purple:hover { background: #7C3AED; }
-        .btn-amber { background: #D97706; box-shadow: 0 0 10px rgba(217, 119, 6, 0.4); color: white; }
-        .btn-amber:hover { background: #B45309; }
-        .btn-danger { background: #EF4444; }
+        .neon-purple { color: #A855F7; text-shadow: 0 0 8px rgba(168, 85, 247, 0.4); }
+        .btn { border: none; padding: 12px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; transition: all 0.2s; width: 100%; box-sizing: border-box; }
+        .btn-cyan { background: #0891B2; box-shadow: 0 0 10px rgba(6, 182, 212, 0.3); }
+        .btn-cyan:hover { background: #0E7490; }
+        .btn-purple { background: #7C3AED; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3); }
         
-        /* Progress XP Bar */
-        .xp-container { background: #1F2937; height: 16px; border-radius: 8px; overflow: hidden; margin: 10px 0; border: 1px solid #374151; position: relative; }
-        .xp-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #A855F7, #22D3EE); transition: width 0.4s ease; }
-        .xp-text { position: absolute; width: 100%; text-align: center; font-size: 11px; font-weight: bold; top: 0; line-height: 16px; color: white; text-shadow: 1px 1px 2px black; }
-
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
-        .stat-box { background: #111625; padding: 12px; border-radius: 8px; border: 1px solid #1F2937; text-align: center; }
+        /* Scanner Visualizer Grid */
+        .scan-container { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .scan-container { grid-template-columns: 1fr 1fr; } }
         
-        .quest-item { display: flex; justify-content: space-between; align-items: center; background: #111625; padding: 12px 15px; border-radius: 8px; border: 1px solid #1F2937; margin-bottom: 8px; }
-        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 15px; }
+        .preview-box { background: #060814; border: 2px dashed #1F2937; border-radius: 10px; height: 300px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .scanning-line { position: absolute; width: 100%; height: 4px; background: #22D3EE; box-shadow: 0 0 12px #22D3EE; top: 0; left: 0; display: none; animation: moveScan 2s linear infinite; }
+        @keyframes moveScan { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
         
-        /* Item Rarity Badges */
-        .item-card { padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 13px; border: 1px solid #374151; background: #111625; position: relative; }
-        .rarity-Common { border-color: #94A3B8; color: #94A3B8; }
-        .rarity-Rare { border-color: #3B82F6; color: #60A5FA; text-shadow: 0 0 5px rgba(59,130,246,0.3); }
-        .rarity-Epic { border-color: #A855F7; color: #C084FC; text-shadow: 0 0 8px rgba(168,85,247,0.4); }
-        .rarity-Mythical { border-color: #EF4444; color: #FCA5A5; background: linear-gradient(135deg, #111625, #450A0A); text-shadow: 0 0 10px #EF4444; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 5px #EF4444; } 50% { box-shadow: 0 0 15px #EF4444; } 100% { box-shadow: 0 0 5px #EF4444; } }
+        /* Metric Analysis Score Gauges */
+        .metric-row { margin-bottom: 15px; }
+        .metric-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; font-weight: bold; }
+        .gauge-container { background: #1F2937; height: 8px; border-radius: 4px; overflow: hidden; }
+        .gauge-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #A855F7, #22D3EE); transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .hidden { display: none !important; }
+        .advice-tag { background: #111827; border: 1px solid #1F2937; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 8px; border-left: 4px solid #A855F7; }
     </style>
 </head>
 <body>
 
     <div class="nav-bar">
-        <h2 style="margin:0; font-size:18px;" class="neon-purple">⚔️ SHADOW LEVELING PANEL</h2>
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <span style="font-weight:bold; font-size: 14px;" class="neon-amber">🪙 Gold: <span id="goldVal">0</span></span>
-            <span style="font-size: 12px; background: #1F2937; padding: 4px 10px; border-radius: 20px; border: 1px solid #374151;">Rank: Solo Hunter</span>
-        </div>
+        <h2 style="margin:0; font-size:18px;" class="neon-cyan">⚡ MATRIX GLOW-UP SCANNER</h2>
+        <span style="font-size: 11px; background: #1F2937; padding: 4px 10px; border-radius: 20px; border: 1px solid #374151;">Engine v1.0</span>
     </div>
 
     <div class="workspace">
         
-        <div class="card" style="border-color: #8B5CF6;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 class="neon-purple" style="margin:0;">👤 Hunter Attributes</h3>
-                <span style="font-size: 20px; font-weight: bold; color: #22D3EE;">LVL <span id="lvlVal">1</span></span>
-            </div>
+        <div class="card" style="border-color: #06B6D4;">
+            <h3 class="neon-cyan">📸 Facial Architecture Telemetry</h3>
+            <p style="font-size: 13px; color: #94A3B8; margin-top: 0;">Upload a front-facing selfie or portrait image to map facial structural symmetries and detect features metrics.</p>
             
-            <div class="xp-container">
-                <div id="xpBar" class="xp-bar"></div>
-                <div id="xpText" class="xp-text">0 / 100 XP</div>
-            </div>
+            <div class="scan-container">
+                <div>
+                    <div class="preview-box" id="previewContainer">
+                        <div class="scanning-line" id="laserLine"></div>
+                        <span id="uploadLabel" style="color:#4B5563; font-size:13px;">No Photo Loaded</span>
+                        <img id="userImage" src="#" alt="User Capture" class="hidden" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="loadPhoto(event)">
+                        <button class="btn btn-cyan" onclick="document.getElementById('fileInput').click()">📁 Select Image Selfie File</button>
+                    </div>
+                    <button class="btn btn-purple hidden" id="scanBtn" style="margin-top:10px;" onclick="executeMatrixScan()">🧬 Run AI Analytics Matrix</button>
+                </div>
 
-            <div class="stats-row">
-                <div class="stat-box">
-                    <div style="font-size: 11px; color:#64748B;">INTELLIGENCE</div>
-                    <div id="statIntel" style="font-size: 20px; font-weight: bold; color:#38BDF8; margin:4px 0;">10</div>
-                </div>
-                <div class="stat-box">
-                    <div style="font-size: 11px; color:#64748B;">FOCUS STAMINA</div>
-                    <div id="statFocus" style="font-size: 20px; font-weight: bold; color:#A855F7; margin:4px 0;">10</div>
-                </div>
-                <div class="stat-box">
-                    <div style="font-size: 11px; color:#64748B;">POWER ATTRIBUTE</div>
-                    <div id="statPower" style="font-size: 20px; font-weight: bold; color:#F43F5E; margin:4px 0;">10</div>
+                <div class="card" style="background:#060814; border-color:#1F2937;">
+                    <h4 class="neon-purple" style="margin-bottom:15px;">📊 Analytics Diagnostic</h4>
+                    <div id="analyticsPlaceholder" style="color:#4B5563; font-size:13px; text-align:center; padding-top:60px;">Awaiting capture payload feed sequence synchronization logs.</div>
+                    
+                    <div id="metricsDeck" class="hidden">
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <div style="font-size:11px; color:#64748B; font-weight:bold;">OVERALL POTENTIAL RATING</div>
+                            <div style="font-size:36px; font-weight:bold; color:#22D3EE;" id="overallScore">--</div>
+                        </div>
+
+                        <div class="metric-row">
+                            <div class="metric-header"><span>Jawline Definition (Goniale Angle)</span><span id="valJaw" class="neon-cyan">0%</span></div>
+                            <div class="gauge-container"><div id="barJaw" class="gauge-bar"></div></div>
+                        </div>
+                        <div class="metric-row">
+                            <div class="metric-header"><span>Eye Alignment (Canthal Tilt Scale)</span><span id="valEyes" class="neon-cyan">0%</span></div>
+                            <div class="gauge-container"><div id="barEyes" class="gauge-bar"></div></div>
+                        </div>
+                        <div class="metric-row">
+                            <div class="metric-header"><span>Symmetry & Proportion Factor</span><span id="valSymmetry" class="neon-cyan">0%</span></div>
+                            <div class="gauge-container"><div id="barSymmetry" class="gauge-bar"></div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="card">
-            <h3 class="neon-cyan">📜 Active Daily Quests</h3>
-            <p style="font-size: 12px; color: #64748B; margin-top: 0; margin-bottom: 15px;">Clear these operations daily to extract resources and scale up your capabilities matrix.</p>
-            
-            <div id="questList">
-                <div class="quest-item">
-                    <div>
-                        <div style="font-weight: bold; font-size:14px;">📚 Complete High-Yield Study Block</div>
-                        <div style="font-size:11px; color:#A855F7;">+40 XP | +50 Gold</div>
-                    </div>
-                    <button class="btn btn-purple" style="padding: 6px 12px; font-size:11px;" onclick="claimQuest(40, 50, this)">Claim</button>
-                </div>
-                <div class="quest-item">
-                    <div>
-                        <div style="font-weight: bold; font-size:14px;">🎯 Resolve 15 Mock Arena Formulas</div>
-                        <div style="font-size:11px; color:#A855F7;">+30 XP | +30 Gold</div>
-                    </div>
-                    <button class="btn btn-purple" style="padding: 6px 12px; font-size:11px;" onclick="claimQuest(30, 30, this)">Claim</button>
-                </div>
-                <div class="quest-item">
-                    <div>
-                        <div style="font-weight: bold; font-size:14px;">🏃 Physical Workout Conditioning</div>
-                        <div style="font-size:11px; color:#A855F7;">+30 XP | +40 Gold</div>
-                    </div>
-                    <button class="btn btn-purple" style="padding: 6px 12px; font-size:11px;" onclick="claimQuest(30, 40, this)">Claim</button>
-                </div>
-            </div>
-            <button class="btn" style="background:#1F2937; width:100%; font-size:11px; margin-top:5px; color:#94A3B8;" onclick="resetQuests()">🔄 Reset All Daily Objectives</button>
-        </div>
-
-        <div class="card" style="border-color: #D97706; text-align: center;">
-            <h3 class="neon-amber">🔮 Monarch's Armory Gacha Vault</h3>
-            <p style="font-size: 12px; color: #94A3B8; margin-top:0;">Spend <strong style="color:#FBBF24;">100 Gold</strong> to summon weapons and gear drops. Can you pull a 0.5% Mythical item?</p>
-            
-            <div style="margin: 20px 0;">
-                <button class="btn btn-amber" style="padding: 14px 40px; font-size:15px;" onclick="rollGacha()">🔥 Summon Item Box (100 Gold)</button>
-            </div>
-            <div id="dropAlert" style="font-size: 14px; font-weight: bold; min-height: 20px; color: #64748B;"></div>
-        </div>
-
-        <div class="card">
-            <h3 class="neon-purple">🎒 Secured Storage Inventory Vault</h3>
-            <div id="inventoryGrid" class="inventory-grid">
-                </div>
+        <div class="card hidden" id="advicePanel" style="border-color:#A855F7;">
+            <h3 class="neon-purple">🛠️ Personalized Optimization Protocols</h3>
+            <p style="font-size:12px; color:#94A3B8; margin-top:0;">Grooming and anatomical level up tasks configured based on feature analysis logs:</p>
+            <div id="adviceContainer"></div>
         </div>
 
     </div>
 
     <script>
-        // Game Engine Profile Save States
-        let profile = JSON.parse(localStorage.getItem('rpg_profile_db')) || {
-            lvl: 1, xp: 0, gold: 200, intel: 10, focus: 10, power: 10, inventory: []
-        };
+        function loadPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-        const itemPool = [
-            { name: "Iron Dagger 🔪", rarity: "Common", chance: 60 },
-            { name: "Hunter Robe 🥼", rarity: "Common", chance: 60 },
-            { name: "Steel Elixir 🧪", rarity: "Rare", chance: 25 },
-            { name: "Shadow Cloak 🪶", rarity: "Rare", chance: 25 },
-            { name: "Sovereign Gauntlet 🧤", rarity: "Epic", chance: 14 },
-            { name: "Demonic Greatsword ⚔️", rarity: "Epic", chance: 14 },
-            { name: "✨ Kamish Dagger ✨", rarity: "Mythical", chance: 1 }
-        ];
-
-        function syncEngineUI() {
-            document.getElementById('lvlVal').innerText = profile.lvl;
-            document.getElementById('goldVal').innerText = profile.gold;
-            document.getElementById('statIntel').innerText = profile.intel;
-            document.getElementById('statFocus').innerText = profile.focus;
-            document.getElementById('statPower').innerText = profile.power;
-            
-            // Calculate XP bracket curves
-            const xpNeeded = profile.lvl * 100;
-            const pct = (profile.xp / xpNeeded) * 100;
-            document.getElementById('xpBar').style.width = `${pct}%`;
-            document.getElementById('xpText').innerText = `${profile.xp} / ${xpNeeded} XP`;
-
-            renderInventory();
-            localStorage.setItem('rpg_profile_db', JSON.stringify(profile));
-        }
-
-        function claimQuest(xp, gold, btn) {
-            if(btn.disabled) return;
-            profile.xp += xp;
-            profile.gold += gold;
-
-            // Level Up logic loop checks
-            let xpNeeded = profile.lvl * 100;
-            if (profile.xp >= xpNeeded) {
-                profile.xp -= xpNeeded;
-                profile.lvl += 1;
-                profile.intel += 2;
-                profile.focus += 2;
-                profile.power += 3;
-                document.getElementById('dropAlert').innerText = "🎉 RANK UP CALIBRATION COMPLETE! Core attributes multiplied.";
-                document.getElementById('dropAlert').style.color = "#22D3EE";
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('userImage');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                document.getElementById('uploadLabel').classList.add('hidden');
+                document.getElementById('scanBtn').classList.remove('hidden');
             }
-
-            btn.disabled = true;
-            btn.innerText = "Cleared ✅";
-            btn.style.background = "#1F2937";
-            btn.style.color = "#4B5563";
-            syncEngineUI();
+            reader.readAsDataURL(file);
         }
 
-        function resetQuests() {
-            document.querySelectorAll('#questList .btn').forEach(btn => {
-                btn.disabled = false;
-                btn.innerText = "Claim";
-                btn.style.background = "#8B5CF6";
-                btn.style.color = "white";
+        function executeMatrixScan() {
+            const laser = document.getElementById('laserLine');
+            laser.style.display = 'block';
+            document.getElementById('scanBtn').disabled = true;
+            document.getElementById('scanBtn').innerText = "Analyzing Nodes...";
+
+            // Matrix simulation cycle (simulating vector math calculation sequences seamlessly)
+            setTimeout(() => {
+                laser.style.display = 'none';
+                document.getElementById('scanBtn').classList.add('hidden');
+                document.getElementById('scanBtn').disabled = false;
+                document.getElementById('scanBtn').innerText = "🧬 Run AI Analytics Matrix";
+                
+                generateAnalysisReports();
+            }, 2500);
+        }
+
+        function generateAnalysisReports() {
+            document.getElementById('analyticsPlaceholder').classList.add('hidden');
+            document.getElementById('metricsDeck').classList.remove('hidden');
+            document.getElementById('advicePanel').classList.remove('hidden');
+
+            // Formulating randomized seed variations for mock face measurements indexes
+            const jawScore = Math.floor(68 + Math.random() * 26);
+            const eyeScore = Math.floor(70 + Math.random() * 24);
+            const symScore = Math.floor(65 + Math.random() * 30);
+            const totalAverage = Math.round((jawScore + eyeScore + symScore) / 3);
+
+            // Triggering visual smooth transitions for gauges
+            setTimeout(() => {
+                document.getElementById('barJaw').style.width = `${jawScore}%`;
+                document.getElementById('valJaw').innerText = `${jawScore}%`;
+
+                document.getElementById('barEyes').style.width = `${eyeScore}%`;
+                document.getElementById('valEyes').innerText = `${eyeScore}%`;
+
+                document.getElementById('barSymmetry').style.width = `${symScore}%`;
+                document.getElementById('valSymmetry').innerText = `${symScore}%`;
+
+                document.getElementById('overallScore').innerText = `${totalAverage}%`;
+            }, 100);
+
+            // Injecting custom routines based on performance tiers
+            const adviceBox = document.getElementById('adviceContainer');
+            adviceBox.innerHTML = '';
+
+            const recommendations = [
+                "🦴 **Jawline Tuning Protocol:** Incorporate mewing posture techniques and hard chewing cycles to tighten the masseter muscle framework configuration indices.",
+                "💧 **Skin Hydration Sequence:** Double up water inputs and optimize a clean facial skincare cycle to increase dermis matrix illumination.",
+                "👁️ **Eye Focus Conditioning:** Target dark circle minimization arrays via cool compresses and sleep alignment consistency."
+            ];
+
+            recommendations.forEach(tip => {
+                adviceBox.innerHTML += `<div class="advice-tag">${tip}</div>`;
             });
         }
-
-        function rollGacha() {
-            if (profile.gold < 100) {
-                document.getElementById('dropAlert').innerText = "⚠️ Gold resources insufficient to secure transmission.";
-                document.getElementById('dropAlert').style.color = "#EF4444";
-                return;
-            }
-
-            profile.gold -= 100;
-            
-            // Drop rate index rolling calculation engine
-            const roll = Math.random() * 100;
-            let chosenItem = itemPool[0];
-
-            if(roll <= 1) { chosenItem = itemPool.find(i => i.rarity === "Mythical"); }
-            else if(roll <= 15) { chosenItem = itemPool.filter(i => i.rarity === "Epic")[Math.floor(Math.random() * 2)]; }
-            else if(roll <= 40) { chosenItem = itemPool.filter(i => i.rarity === "Rare")[Math.floor(Math.random() * 2)]; }
-            else { chosenItem = itemPool.filter(i => i.rarity === "Common")[Math.floor(Math.random() * 2)]; }
-
-            profile.inventory.push(chosenItem);
-            
-            const alertText = document.getElementById('dropAlert');
-            alertText.innerText = `🎰 SUMMONED: ${chosenItem.name} [${chosenItem.rarity}]`;
-            
-            if(chosenItem.rarity === "Mythical") alertText.style.color = "#EF4444";
-            else if(chosenItem.rarity === "Epic") alertText.style.color = "#C084FC";
-            else if(chosenItem.rarity === "Rare") alertText.style.color = "#60A5FA";
-            else alertText.style.color = "#94A3B8";
-
-            syncEngineUI();
-        }
-
-        function renderInventory() {
-            const grid = document.getElementById('inventoryGrid');
-            grid.innerHTML = '';
-            if(profile.inventory.length === 0) {
-                grid.innerHTML = '<p style="color:#4B5563; font-size:12px; padding:5px;">Storage matrix vacant.</p>';
-                return;
-            }
-            profile.inventory.forEach(item => {
-                grid.innerHTML += `<div class="item-card rarity-${item.rarity}">${item.name}<div style="font-size:9px; margin-top:4px; opacity:0.6;">${item.rarity}</div></div>`;
-            });
-        }
-
-        window.onload = syncEngineUI;
     </script>
 </body>
 </html>
+
 
 
