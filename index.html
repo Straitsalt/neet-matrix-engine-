@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neet Prep - Crack Your Goals</title>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #0B0F19; color: #E2E8F0; }
+        .hidden { display: none !important; }
+        .nav-bar { background: #111827; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1F2937; }
+        .btn { border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; transition: all 0.2s; }
+        .btn-primary { background: #2563EB; }
+        .btn-success { background: #10B981; }
+        .btn-accent { background: #8B5CF6; }
+        .btn-danger { background: #EF4444; }
+        .workspace-layout { padding: 20px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        .card { background: #111827; padding: 20px; border-radius: 12px; border: 1px solid #1F2937; }
+        h4 { margin-top: 0; color: #F1F5F9; border-bottom: 1px solid #1F2937; padding-bottom: 10px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        input, select, textarea { padding: 10px; background: #0B0F19; border: 1px solid #374151; color: white; border-radius: 8px; }
+        .options-grid { display: flex; flex-direction: column; gap: 10px; }
+        .option-btn { background: #1F2937; border: 1px solid #374151; color: #E2E8F0; padding: 14px; border-radius: 8px; text-align: left; cursor: pointer; width: 100%; }
+        .option-btn.selected { border-color: #2563EB; background: rgba(37, 99, 235, 0.15); }
+        .option-btn.correct-reveal { border-color: #10B981; background: rgba(16, 185, 129, 0.2); color: #34D399; }
+        .option-btn.wrong-reveal { border-color: #EF4444; background: rgba(239, 68, 68, 0.15); color: #FCA5A5; }
+        .tracker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+        .subject-box { background: #1F2937; padding: 12px; border-radius: 8px; border: 1px solid #374151; }
+    </style>
+</head>
+<body>
+
+    <!-- AUTHENTICATION SCREEN -->
+    <div id="authScreen" class="workspace-layout" style="margin-top: 100px; max-width: 400px;">
+        <div class="card">
+            <h3 style="text-align: center; color: #38BDF8; margin-top: 0;">🔐 NEET PREP PORTAL</h3>
+            <div class="form-group"><label>Username</label><input type="text" id="authUser" placeholder="Enter username"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="authPass" placeholder="Enter password"></div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="handleAuth('login')">Log In</button>
+                <button class="btn btn-accent" style="flex: 1;" onclick="handleAuth('signup')">Sign Up</button>
+            </div>
+            <p id="authError" style="color: #EF4444; font-size: 12px; text-align: center; margin-top: 10px;"></p>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="appContainer" class="hidden">
+        <div class="nav-bar">
+            <h2 id="userGreeting" style="margin:0; font-size:18px; color:#38BDF8;">⚡ Neet Prep</h2>
+            <div>
+                <button class="btn btn-primary" onclick="switchView('homePage')">🏠 Home</button>
+                <button class="btn btn-accent" onclick="switchView('creatorDeck')">⚙️ Data Engine</button>
+                <button class="btn btn-success" onclick="switchView('practiceArena')">🚀 Arena</button>
+                <button class="btn btn-danger" style="padding: 6px 10px;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="workspace-layout">
+            <!-- SCREEN 1: HOME PAGE WITH USER TAGLINE -->
+            <div id="homePage" class="view-panel">
+                <div class="card" style="text-align: center; background: linear-gradient(135deg, #1E1B4B, #111827); border-color: #4338CA; padding: 40px 20px; margin-bottom: 20px;">
+                    <h1 style="color: #F8FAFC; margin: 0 0 10px 0; font-size: 32px;">Neet Prep</h1>
+                    <h3 style="color: #6366F1; font-style: italic; margin: 0 0 25px 0; font-weight: 400;">Crack your goals</h3>
+                    <p style="color: #94A3B8; font-size: 14px;">~ Piyush</p>
+                </div>
+
+                <!-- SYLLABUS TRACKER COUNTERS -->
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4>📋 Syllabus Tracker Breakdown</h4>
+                    <div class="tracker-grid">
+                        <div class="subject-box" style="border-top: 4px solid #38BDF8;">
+                            <h4 style="color:#38BDF8; border:none; margin:0;">Physics</h4>
+                            <h2 style="margin: 10px 0 0 0;">30 <span style="font-size:14px; color:#94A3B8;">Chaps</span></h2>
+                        </div>
+                        <div class="subject-box" style="border-top: 4px solid #F59E0B;">
+                            <h4 style="color:#F59E0B; border:none; margin:0;">Chemistry</h4>
+                            <h2 style="margin: 10px 0 0 0;">30 <span style="font-size:14px; color:#94A3B8;">Chaps</span></h2>
+                        </div>
+                        <div class="subject-box" style="border-top: 4px solid #10B981;">
+                            <h4 style="color:#10B981; border:none; margin:0;">Biology</h4>
+                            <h2 style="margin: 10px 0 0 0;">32 <span style="font-size:14px; color:#94A3B8;">Chaps</span></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 2: DATA ENGINE & UPLOAD MODULES -->
+            <div id="creatorDeck" class="view-panel hidden">
+                <div class="card" style="border-color: #EC4899; margin-bottom: 20px;">
+                    <h4>📁 Reference PDF Storage Hub</h4>
+                    <div class="form-group">
+                        <label>Upload Reference PDF Notes/Modules</label>
+                        <input type="file" id="pdfUploadInput" accept=".pdf" onchange="simulatePdfLog()">
+                    </div>
+                    <p id="pdfFeedback" style="color:#34D399; font-size:13px; margin:0;" class="hidden"></p>
+                </div>
+
+                <div class="card" style="border-color: #8B5CF6; margin-bottom: 20px;">
+                    <h4 style="color: #A78BFA;">🌐 Fast Dynamic AI Question Injection</h4>
+                    <div class="form-group">
+                        <textarea id="bulkTextData" rows="4" placeholder="Paste structural AI lines here..."></textarea>
+                    </div>
+                    <button class="btn" style="background: #EC4899; width: 100%;" onclick="processBulkTextUpload()">📥 Process Import Loop</button>
+                </div>
+                
+                <button class="btn btn-accent" style="width: 100%;" onclick="seedGlobalDatabase()">⚡ Seed 20 Foundation Practice Questions</button>
+            </div>
+
+            <!-- SCREEN 3: PRACTICE ARENA & DIAGNOSTICS -->
+            <div id="practiceArena" class="view-panel hidden">
+                <div class="card" id="filterDeck">
+                    <h4>🎯 Session Launch Desk (<span id="totalAvailableCounter">0</span> Questions)</h4>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <select id="runSubject" style="flex:1;" onchange="populateChaptersFilter()"><option value="All">All Subjects</option><option>Physics</option><option>Chemistry</option><option>Biology</option></select>
+                        <select id="runChapter" style="flex:1;"><option value="All">All Chapters</option></select>
+                    </div>
+                    <button class="btn btn-success" style="width: 100%;" onclick="startPracticeSession()">⚡ Launch Test Arena</button>
+                </div>
+
+                <div class="card hidden" id="arenaBox">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <span id="arenaMeta" class="badge" style="color:#38BDF8;">Physics</span>
+                        <span id="arenaTracker">Question 1</span>
+                    </div>
+                    <p id="arenaQuestionText" style="font-size:16px; font-weight:500; margin-bottom:20px;"></p>
+                    <div class="options-grid">
+                        <button id="optBtnA" class="option-btn" onclick="selectOption('A')"></button>
+                        <button id="optBtnB" class="option-btn" onclick="selectOption('B')"></button>
+                        <button id="optBtnC" class="option-btn" onclick="selectOption('C')"></button>
+                        <button id="optBtnD" class="option-btn" onclick="selectOption('D')"></button>
+                    </div>
+                    <button id="actionBtn" class="btn btn-primary" style="margin-top:20px; width:100%;" onclick="handleActionClick()">Check Answer</button>
+                </div>
+
+                <!-- DIAGNOSTIC PERFORMANCE RESULTS -->
+                <div class="card hidden" id="resultsDeck">
+                    <h4 style="color: #34D399;">📊 Results Breakdown Performance</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; margin-bottom: 20px;">
+                        <div style="background:#1F2937; padding:10px; border-radius:6px;"><h5>Total</h5><h2 id="resTotal">0</h2></div>
+                        <div style="background:#1F2937; padding:10px; border-radius:6px;"><h5 style="color:#34D399;">Correct</h5><h2 id="resCorrect">0</h2></div>
+                        <div style="background:#1F2937; padding:10px; border-radius:6px;"><h5 style="color:#38BDF8;">Accuracy</h5><h2 id="resAccuracy">0%</h2></div>
+                    </div>
+                    <div style="background: #1F2937; padding: 15px; border-radius: 8px; border-left: 4px solid #EF4444;">
+                        <h5 style="margin:0 0 10px 0; color:#FCA5A5;">⚠️ CONCEPT DEFICIT DIAGNOSTICS</h5>
+                        <div id="weaknessReportContainer"></div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top:15px;" onclick="exitResults()">Return to Parameters Deck</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // BACKEND CONTROLLERS & DATA REPOSITORIES
+        let usersDB = JSON.parse(localStorage.getItem('neet_users_db')) || {};
+        let currentUser = localStorage.getItem('neet_current_session_user') || null;
+        let questionBank = [];
+
+        function initUserSession() {
+            if (currentUser) {
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('appContainer').classList.remove('hidden');
+                document.getElementById('userGreeting').innerText = `⚡ Welcome, ${currentUser.toUpperCase()}`;
+                questionBank = usersDB[currentUser].questions || [];
+                populateChaptersFilter();
+            } else {
+                document.getElementById('authScreen').classList.remove('hidden');
+                document.getElementById('appContainer').classList.add('hidden');
+            }
+        }
+
+        function handleAuth(type) {
+            const u = document.getElementById('authUser').value.trim(), p = document.getElementById('authPass').value.trim();
+            if(!u || !p) { document.getElementById('authError').innerText = "Fill entry parameters."; return; }
+            if(type === 'signup') {
+                if(usersDB[u]) { document.getElementById('authError').innerText = "User configuration exists."; return; }
+                usersDB[u] = { password: p, questions: [] };
+                localStorage.setItem('neet_users_db', JSON.stringify(usersDB));
+                alert("Account created! Log in now.");
+            } else {
+                if(!usersDB[u] || usersDB[u].password !== p) { document.getElementById('authError').innerText = "Invalid credentials matrix."; return; }
+                currentUser = u; localStorage.setItem('neet_current_session_user', u);
+                initUserSession();
+            }
+        }
+
+        function logout() { localStorage.removeItem('neet_current_session_user'); currentUser = null; initUserSession(); }
+        function simulatePdfLog() { const val = document.getElementById('pdfUploadInput').value; const fb = document.getElementById('pdfFeedback'); fb.innerText = `📄 PDF Configured Successfully: ${val.split('\\').pop()}`; fb.classList.remove('hidden'); }
+        function switchView(id) { document.querySelectorAll('.view-panel').forEach(v => v.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+
+        function processBulkTextUpload() {
+            const data = document.getElementById('bulkTextData').value.trim(); if(!data) return;
+            const lines = data.split('\n');
+            lines.forEach(line => {
+                if (!line.includes('|')) return;
+                const b = line.split('|'); let q="", a="", bb="", c="", d="", k="", t="", s="Physics";
+                b.forEach(x => {
+                    let str = x.trim();
+                    if(str.startsWith("Question:")) q = str.replace("Question:","").trim();
+                    else if(str.startsWith("A:")) a = str.replace("A:","").trim();
+                    else if(str.startsWith("B:")) bb = str.replace("B:","").trim();
+                    else if(str.startsWith("C:")) c = str.replace("C:","").trim();
+                    else if(str.startsWith("D:")) d = str.replace("D:","").trim();
+                    else if(str.startsWith("Key:")) k = str.replace("Key:","").trim().toUpperCase();
+                    else if(str.startsWith("Tag:")) t = str.replace("Tag:","").trim();
+                    else if(str.startsWith("Subject:")) s = str.replace("Subject:","").trim();
+                });
+                if(q&&a&&bb&&c&&d&&k) questionBank.push({ subject: s, chapter:"Bulk Data", conceptTag: t||"General", question:q, options:{A:a,B:bb,C:c,D:d}, answerKey:k });
+            });
+            usersDB[currentUser].questions = questionBank; localStorage.setItem('neet_users_db', JSON.stringify(usersDB));
+            document.getElementById('bulkTextData').value = ''; alert("Imported!"); populateChaptersFilter();
+        }
+
+        function seedGlobalDatabase() {
+            const pack = [
+                { subject: "Physics", chapter: "Kinematics", conceptTag: "Projectile Motion", question: "A projectile is thrown with an initial velocity u at an angle θ with the horizontal. What is its velocity vector at the maximum height of its trajectory flight path?", options: { A: "Zero", B: "u sinθ", C: "u cosθ", D: "u" }, answerKey: "C" },
+                { subject: "Chemistry", chapter: "Organic Chemistry", conceptTag: "IUPAC Naming", question: "Identify the correct structural IUPAC nomenclature configuration sequence for the molecule Neo-pentane.", options: { A: "2-methylbutane", B: "2,2-dimethylpropane", C: "Dimethylpropane", D: "1,1,1-trimethylethane" }, answerKey: "B" },
+                { subject: "Biology", chapter: "Cell Cycle", conceptTag: "Mitosis Phases", question: "During which micro-cellular phase sequence do identical sister chromatid arm structures separate cleanly and migrate towards opposite poles?", options: { A: "Metaphase", B: "Anaphase", C: "Prophase", D: "Telophase" }, answerKey: "B" }
+            ];
+            pack.forEach(q => { if(!questionBank.some(x=>x.question===q.question)) questionBank.push(q); });
+            usersDB[currentUser].questions = questionBank; localStorage.setItem('neet_users_db', JSON.stringify(usersDB));
+            populateChaptersFilter(); alert("High-yield foundational matrix loaded to your profile!");
+        }
+
+        function populateChaptersFilter() {
+            document.getElementById('totalAvailableCounter').innerText = questionBank.length;
+            const sub = document.getElementById('runSubject').value, chSelect = document.getElementById('runChapter');
+            chSelect.innerHTML = '<option value="All">All Chapters</option>';
+            let chaps = [...new Set(questionBank.filter(q => sub==='All' || q.subject===sub).map(q => q.chapter))];
+            chaps.forEach(c => chSelect.innerHTML += `<option value="${c}">${c}</option>`);
+        }
+
+        let activeSessionQuestions = [], currentIndex = 0, selectedAnswer = "", isAnswerChecked = false, sessionPerformanceLog = [];
+        function startPracticeSession() {
+            const sub = document.getElementById('runSubject').value, ch = document.getElementById('runChapter').value;
+            activeSessionQuestions = questionBank.filter(q => (sub==='All' || q.subject===sub) && (ch==='All' || q.chapter===ch));
+            if(activeSessionQuestions.length === 0) { alert("No questions matched filter metrics."); return; }
+            activeSessionQuestions.sort(() => Math.random() - 0.5); currentIndex = 0; sessionPerformanceLog = [];
+            document.getElementById('filterDeck').classList.add('hidden'); document.getElementById('arenaBox').classList.remove('hidden');
+            loadCurrentQuestion();
+        }
+
+        function loadCurrentQuestion() {
+            selectedAnswer = ""; isAnswerChecked = false; resetOptionStyles();
+            const q = activeSessionQuestions[currentIndex];
+            document.getElementById('arenaMeta').innerText = `${q.subject.toUpperCase()} | ${q.conceptTag.toUpperCase()}`;
+            document.getElementById('arenaTracker').innerText = `Question ${currentIndex + 1} of ${activeSessionQuestions.length}`;
+            document.getElementById('arenaQuestionText').innerText = q.question;
+            ['A','B','C','D'].forEach(l => document.getElementById(`optBtn${l}`).innerText = `${l}) ${q.options[l]}`);
+            document.getElementById('actionBtn').innerText = "Check Answer";
+        }
+
+        function selectOption(letter) { if (isAnswerChecked) return; selectedAnswer = letter; resetOptionStyles(); document.getElementById(`optBtn${letter}`).classList.add('selected'); }
+        
+        function handleActionClick() {
+            const q = activeSessionQuestions[currentIndex];
+            if(!isAnswerChecked) {
+                if(!selectedAnswer) { alert("Select option component."); return; }
+                sessionPerformanceLog.push({ concept: q.conceptTag, isCorrect: (selectedAnswer === q.answerKey) });
+                isAnswerChecked = true; document.getElementById(`optBtn${selectedAnswer}`).classList.add(selectedAnswer===q.answerKey ? 'correct-reveal' : 'wrong-reveal');
+                document.getElementById(`optBtn覆${q.answerKey}` ? `optBtn${q.answerKey}` : `optBtn${q.answerKey}`).classList.add('correct-reveal');
+                document.getElementById('actionBtn').innerText = "Next Question";
+            } else {
+                if(currentIndex < activeSessionQuestions.length - 1) { currentIndex++; loadCurrentQuestion(); }
+                else { evaluateSummary(); }
+            }
+        }
+
+        function evaluateSummary() {
+            document.getElementById('arenaBox').classList.add('hidden'); document.getElementById('resultsDeck').classList.remove('hidden');
+            const total = sessionPerformanceLog.length, correct = sessionPerformanceLog.filter(x=>x.isCorrect).length;
+            document.getElementById('resTotal').innerText = total; document.getElementById('resCorrect').innerText = correct;
+            document.getElementById('resAccuracy').innerText = `${total > 0 ? ((correct/total)*100).toFixed(0) : 0}%`;
+            const container = document.getElementById('weakn
