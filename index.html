@@ -1,208 +1,244 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Squad Live Matrix Radar</title>
+    <title>Shadow Leveling Engine</title>
     <style>
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #05070F; color: #E2E8F0; }
-        .nav-bar { background: #0B0E1A; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #38BDF8; box-shadow: 0 0 20px rgba(56, 189, 248, 0.15); }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #03050A; color: #E2E8F0; }
+        .nav-bar { background: #0A0D16; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #A855F7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.2); }
         .workspace { padding: 20px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: #0B0E1A; padding: 20px; border-radius: 12px; border: 1px solid #1F2937; }
-        h3, h4 { margin-top: 0; letter-spacing: 0.5px; }
-        .neon-blue { color: #38BDF8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.4); }
-        .neon-purple { color: #A78BFA; text-shadow: 0 0 8px rgba(167, 139, 250, 0.4); }
+        .card { background: #0A0D16; padding: 20px; border-radius: 12px; border: 1px solid #1F2937; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        h3, h4 { margin-top: 0; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .neon-purple { color: #C084FC; text-shadow: 0 0 8px rgba(168, 85, 247, 0.4); }
+        .neon-amber { color: #FBBF24; text-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+        .neon-cyan { color: #22D3EE; text-shadow: 0 0 8px rgba(34, 211, 238, 0.4); }
         .btn { border: none; padding: 12px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; transition: all 0.2s; }
-        .btn-blue { background: #2563EB; box-shadow: 0 0 10px rgba(37, 99, 235, 0.3); }
-        .btn-purple { background: #8B5CF6; box-shadow: 0 0 10px rgba(139, 92, 246, 0.3); }
+        .btn-purple { background: #8B5CF6; box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
+        .btn-purple:hover { background: #7C3AED; }
+        .btn-amber { background: #D97706; box-shadow: 0 0 10px rgba(217, 119, 6, 0.4); color: white; }
+        .btn-amber:hover { background: #B45309; }
         .btn-danger { background: #EF4444; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        input { padding: 12px; background: #05070F; border: 1px solid #374151; color: white; border-radius: 8px; font-size: 14px; }
-        input:focus { border-color: #38BDF8; outline: none; }
         
-        /* Progress meter bar styling */
-        .meter-container { background: #1F2937; height: 12px; border-radius: 6px; overflow: hidden; margin: 10px 0; border: 1px solid #374151; }
-        .meter-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #38BDF8, #8B5CF6); transition: width 0.5s ease-in-out; }
+        /* Progress XP Bar */
+        .xp-container { background: #1F2937; height: 16px; border-radius: 8px; overflow: hidden; margin: 10px 0; border: 1px solid #374151; position: relative; }
+        .xp-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #A855F7, #22D3EE); transition: width 0.4s ease; }
+        .xp-text { position: absolute; width: 100%; text-align: center; font-size: 11px; font-weight: bold; top: 0; line-height: 16px; color: white; text-shadow: 1px 1px 2px black; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
+        .stat-box { background: #111625; padding: 12px; border-radius: 8px; border: 1px solid #1F2937; text-align: center; }
         
-        .radar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 15px; }
-        .radar-card { background: #13172B; padding: 16px; border-radius: 10px; border: 1px solid #242B4D; display: flex; flex-direction: column; justify-content: space-between; }
-        .identity-badge { background: rgba(139, 92, 246, 0.2); border: 1px solid #8B5CF6; padding: 8px 12px; border-radius: 8px; font-family: monospace; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .quest-item { display: flex; justify-content: space-between; align-items: center; background: #111625; padding: 12px 15px; border-radius: 8px; border: 1px solid #1F2937; margin-bottom: 8px; }
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 15px; }
+        
+        /* Item Rarity Badges */
+        .item-card { padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 13px; border: 1px solid #374151; background: #111625; position: relative; }
+        .rarity-Common { border-color: #94A3B8; color: #94A3B8; }
+        .rarity-Rare { border-color: #3B82F6; color: #60A5FA; text-shadow: 0 0 5px rgba(59,130,246,0.3); }
+        .rarity-Epic { border-color: #A855F7; color: #C084FC; text-shadow: 0 0 8px rgba(168,85,247,0.4); }
+        .rarity-Mythical { border-color: #EF4444; color: #FCA5A5; background: linear-gradient(135deg, #111625, #450A0A); text-shadow: 0 0 10px #EF4444; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 5px #EF4444; } 50% { box-shadow: 0 0 15px #EF4444; } 100% { box-shadow: 0 0 5px #EF4444; } }
     </style>
 </head>
 <body>
 
     <div class="nav-bar">
-        <h2 style="margin:0; font-size:18px;" class="neon-blue">📡 LIVE SQUAD TELEMETRY</h2>
-        <span style="font-size: 11px; background: #111827; padding: 6px 12px; border-radius: 20px; color: #34D399; border: 1px solid #1F2937;">Radar Online</span>
+        <h2 style="margin:0; font-size:18px;" class="neon-purple">⚔️ SHADOW LEVELING PANEL</h2>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <span style="font-weight:bold; font-size: 14px;" class="neon-amber">🪙 Gold: <span id="goldVal">0</span></span>
+            <span style="font-size: 12px; background: #1F2937; padding: 4px 10px; border-radius: 20px; border: 1px solid #374151;">Rank: Solo Hunter</span>
+        </div>
     </div>
 
     <div class="workspace">
         
         <div class="card" style="border-color: #8B5CF6;">
-            <h3 class="neon-purple">🔑 Your Core Transmitter Node</h3>
-            <p style="font-size: 13px; color: #94A3B8; margin-top: 0;">Share this exact code string with your friends so they can track your live distance metric.</p>
-            
-            <div class="identity-badge">
-                <span>TRANSMITTER KEY:</span>
-                <strong id="myTrackingCode" style="color:#A78BFA;">Generating Key...</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="neon-purple" style="margin:0;">👤 Hunter Attributes</h3>
+                <span style="font-size: 20px; font-weight: bold; color: #22D3EE;">LVL <span id="lvlVal">1</span></span>
             </div>
             
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="btn btn-purple" style="flex: 1;" onclick="activateMyGPS()">🛰️ Initialize Live Satellite Broadcast</button>
+            <div class="xp-container">
+                <div id="xpBar" class="xp-bar"></div>
+                <div id="xpText" class="xp-text">0 / 100 XP</div>
             </div>
-            <p id="myCoordinateStats" style="font-size: 11px; color: #64748B; margin: 8px 0 0 0; text-align: center;"></p>
-        </div>
 
-        <div class="card" style="border-color: #38BDF8;">
-            <h3 class="neon-blue">🎯 Connect Target Friend Code</h3>
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; align-items: end;">
-                <div class="form-group">
-                    <label style="font-size: 11px; color: #94A3B8;">Target Tracking Code</label>
-                    <input type="text" id="targetFriendCode" placeholder="e.g., SQUAD-4321">
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div style="font-size: 11px; color:#64748B;">INTELLIGENCE</div>
+                    <div id="statIntel" style="font-size: 20px; font-weight: bold; color:#38BDF8; margin:4px 0;">10</div>
                 </div>
-                <button class="btn btn-blue" style="height: 44px;" onclick="connectTargetFriend()">📡 Lock Target</button>
+                <div class="stat-box">
+                    <div style="font-size: 11px; color:#64748B;">FOCUS STAMINA</div>
+                    <div id="statFocus" style="font-size: 20px; font-weight: bold; color:#A855F7; margin:4px 0;">10</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 11px; color:#64748B;">POWER ATTRIBUTE</div>
+                    <div id="statPower" style="font-size: 20px; font-weight: bold; color:#F43F5E; margin:4px 0;">10</div>
+                </div>
             </div>
         </div>
 
         <div class="card">
-            <h3 class="neon-blue">🌐 Active Squad Telemetry</h3>
-            <div id="radarScopeGrid" class="radar-grid"></div>
+            <h3 class="neon-cyan">📜 Active Daily Quests</h3>
+            <p style="font-size: 12px; color: #64748B; margin-top: 0; margin-bottom: 15px;">Clear these operations daily to extract resources and scale up your capabilities matrix.</p>
+            
+            <div id="questList">
+                <div class="quest-item">
+                    <div>
+                        <div style="font-weight: bold; font-size:14px;">📚 Complete High-Yield Study Block</div>
+                        <div style="font-size:11px; color:#A855F7;">+40 XP | +50 Gold</div>
+                    </div>
+                    <button class="btn btn-purple" style="padding: 6px 12px; font-size:11px;" onclick="claimQuest(40, 50, this)">Claim</button>
+                </div>
+                <div class="quest-item">
+                    <div>
+                        <div style="font-weight: bold; font-size:14px;">🎯 Resolve 15 Mock Arena Formulas</div>
+                        <div style="font-size:11px; color:#A855F7;">+30 XP | +30 Gold</div>
+                    </div>
+                    <button class="btn btn-purple" style="padding: 6px 12px; font-size:11px;" onclick="claimQuest(30, 30, this)">Claim</button>
+                </div>
+                <div class="quest-item">
+                    <div>
+                        <div style="font-weight: bold; font-size:14px;">🏃 Physical Workout Conditioning</div>
+                        <div style="font-size:11px; color:#A855F7;">+30 XP | +40 Gold</div>
+                    </div>
+                    <button class="btn btn-purple" style="padding: 6px 12px; font-size:11px;" onclick="claimQuest(30, 40, this)">Claim</button>
+                </div>
+            </div>
+            <button class="btn" style="background:#1F2937; width:100%; font-size:11px; margin-top:5px; color:#94A3B8;" onclick="resetQuests()">🔄 Reset All Daily Objectives</button>
+        </div>
+
+        <div class="card" style="border-color: #D97706; text-align: center;">
+            <h3 class="neon-amber">🔮 Monarch's Armory Gacha Vault</h3>
+            <p style="font-size: 12px; color: #94A3B8; margin-top:0;">Spend <strong style="color:#FBBF24;">100 Gold</strong> to summon weapons and gear drops. Can you pull a 0.5% Mythical item?</p>
+            
+            <div style="margin: 20px 0;">
+                <button class="btn btn-amber" style="padding: 14px 40px; font-size:15px;" onclick="rollGacha()">🔥 Summon Item Box (100 Gold)</button>
+            </div>
+            <div id="dropAlert" style="font-size: 14px; font-weight: bold; min-height: 20px; color: #64748B;"></div>
+        </div>
+
+        <div class="card">
+            <h3 class="neon-purple">🎒 Secured Storage Inventory Vault</h3>
+            <div id="inventoryGrid" class="inventory-grid">
+                </div>
         </div>
 
     </div>
 
     <script>
-        // Unique persistent code generation sequence
-        if(!localStorage.getItem('matrix_my_id_code')) {
-            const randomId = Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('matrix_my_id_code', `SQUAD-${randomId}`);
-        }
-        const myUniqueCode = localStorage.getItem('matrix_my_id_code');
-        document.getElementById('myTrackingCode').innerText = myUniqueCode;
+        // Game Engine Profile Save States
+        let profile = JSON.parse(localStorage.getItem('rpg_profile_db')) || {
+            lvl: 1, xp: 0, gold: 200, intel: 10, focus: 10, power: 10, inventory: []
+        };
 
-        let myLat = null, myLng = null;
-        let trackedFriends = JSON.parse(localStorage.getItem('matrix_tracked_friends')) || [];
+        const itemPool = [
+            { name: "Iron Dagger 🔪", rarity: "Common", chance: 60 },
+            { name: "Hunter Robe 🥼", rarity: "Common", chance: 60 },
+            { name: "Steel Elixir 🧪", rarity: "Rare", chance: 25 },
+            { name: "Shadow Cloak 🪶", rarity: "Rare", chance: 25 },
+            { name: "Sovereign Gauntlet 🧤", rarity: "Epic", chance: 14 },
+            { name: "Demonic Greatsword ⚔️", rarity: "Epic", chance: 14 },
+            { name: "✨ Kamish Dagger ✨", rarity: "Mythical", chance: 1 }
+        ];
 
-        function activateMyGPS() {
-            if (!navigator.geolocation) {
-                alert("GPS access blocked by device settings.");
-                return;
-            }
-
-            navigator.geolocation.watchPosition(position => {
-                myLat = position.coords.latitude;
-                myLng = position.coords.longitude;
-                
-                document.getElementById('myCoordinateStats').innerText = `📡 Broadcasting GPS: ${myLat.toFixed(5)}, ${myLng.toFixed(5)}`;
-                
-                localStorage.setItem(`global_relay_${myUniqueCode}`, JSON.stringify({
-                    lat: myLat, lng: myLng, timestamp: Date.now()
-                }));
-                
-                updateRadarTelemetry();
-            }, () => {
-                alert("Failed to find GPS satellites. Check location access authorization properties.");
-            }, { enableHighAccuracy: true, maximumAge: 0 });
-        }
-
-        function connectTargetFriend() {
-            const inputCode = document.getElementById('targetFriendCode').value.trim().toUpperCase();
-            if (!inputCode) return;
-            if (inputCode === myUniqueCode) {
-                alert("Cannot loopback link to your own signature array node.");
-                return;
-            }
-
-            if (!trackedFriends.includes(inputCode)) {
-                trackedFriends.push(inputCode);
-                localStorage.setItem('matrix_tracked_friends', JSON.stringify(trackedFriends));
-            }
+        function syncEngineUI() {
+            document.getElementById('lvlVal').innerText = profile.lvl;
+            document.getElementById('goldVal').innerText = profile.gold;
+            document.getElementById('statIntel').innerText = profile.intel;
+            document.getElementById('statFocus').innerText = profile.focus;
+            document.getElementById('statPower').innerText = profile.power;
             
-            document.getElementById('targetFriendCode').value = '';
+            // Calculate XP bracket curves
+            const xpNeeded = profile.lvl * 100;
+            const pct = (profile.xp / xpNeeded) * 100;
+            document.getElementById('xpBar').style.width = `${pct}%`;
+            document.getElementById('xpText').innerText = `${profile.xp} / ${xpNeeded} XP`;
 
-            // Fallback generation offset if code is tested locally on the same network array
-            if (!localStorage.getItem(`global_relay_${inputCode}`)) {
-                const offsetLat = (myLat || 18.520) + (Math.random() - 0.5) * 0.1;
-                const offsetLng = (myLng || 73.856) + (Math.random() - 0.5) * 0.1;
-                localStorage.setItem(`global_relay_${inputCode}`, JSON.stringify({
-                    lat: offsetLat, lng: offsetLng, timestamp: Date.now()
-                }));
+            renderInventory();
+            localStorage.setItem('rpg_profile_db', JSON.stringify(profile));
+        }
+
+        function claimQuest(xp, gold, btn) {
+            if(btn.disabled) return;
+            profile.xp += xp;
+            profile.gold += gold;
+
+            // Level Up logic loop checks
+            let xpNeeded = profile.lvl * 100;
+            if (profile.xp >= xpNeeded) {
+                profile.xp -= xpNeeded;
+                profile.lvl += 1;
+                profile.intel += 2;
+                profile.focus += 2;
+                profile.power += 3;
+                document.getElementById('dropAlert').innerText = "🎉 RANK UP CALIBRATION COMPLETE! Core attributes multiplied.";
+                document.getElementById('dropAlert').style.color = "#22D3EE";
             }
 
-            updateRadarTelemetry();
+            btn.disabled = true;
+            btn.innerText = "Cleared ✅";
+            btn.style.background = "#1F2937";
+            btn.style.color = "#4B5563";
+            syncEngineUI();
         }
 
-        function disconnectTarget(idx) {
-            trackedFriends.splice(idx, 1);
-            localStorage.setItem('matrix_tracked_friends', JSON.stringify(trackedFriends));
-            updateRadarTelemetry();
-        }
-
-        // Clean Haversine Math equation block sequence mapping
-        function computeVectorDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; 
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-        }
-
-        function updateRadarTelemetry() {
-            const grid = document.getElementById('radarScopeGrid');
-            grid.innerHTML = '';
-
-            if (trackedFriends.length === 0) {
-                grid.innerHTML = '<p style="color:#4B5563; font-size:13px; padding:10px;">No locked tracking signature arrays found.</p>';
-                return;
-            }
-
-            trackedFriends.forEach((code, index) => {
-                const telemetryData = JSON.parse(localStorage.getItem(`global_relay_${code}`));
-                let distanceText = "Locating connection payload...";
-                let meterPercentage = 0;
-                let latVal = 0, lngVal = 0;
-
-                if (telemetryData && myLat && myLng) {
-                    latVal = telemetryData.lat;
-                    lngVal = telemetryData.lng;
-                    const distanceKM = computeVectorDistance(myLat, myLng, latVal, lngVal);
-                    
-                    if (distanceKM !== null) {
-                        distanceText = `${distanceKM.toFixed(2)} KM Away`;
-                        // Scaling index: Closer proximity = higher meter fill bar
-                        meterPercentage = Math.max(0, Math.min(100, 100 - (distanceKM * 2)));
-                    }
-                } else if (!myLat || !myLng) {
-                    distanceText = "Awaiting local GPS transmission link initialization...";
-                }
-
-                grid.innerHTML += `
-                    <div class="radar-card">
-                        <div>
-                            <h4 style="margin:0 0 4px 0; color:#38BDF8;">🎯 Target: ${code}</h4>
-                            <p style="font-size:15px; font-weight:bold; color:#A78BFA; margin:8px 0 4px 0;">${distanceText}</p>
-                            
-                            <div class="meter-container">
-                                <div class="meter-bar" style="width: ${meterPercentage}%;"></div>
-                            </div>
-                            
-                            <p style="font-size:11px; color:#4B5563; margin:0;">Coordinates: ${latVal ? latVal.toFixed(4) : '0.000'}, ${lngVal ? lngVal.toFixed(4) : '0.000'}</p>
-                        </div>
-                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
-                            <a href="https://www.google.com/maps/search/?api=1&query=${latVal},${lngVal}" target="_blank" style="font-size:11px; color:#38BDF8; text-decoration:none; font-weight:bold;">Track on Map ➔</a>
-                            <button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="disconnectTarget(${index})">Drop</button>
-                        </div>
-                    </div>
-                `;
+        function resetQuests() {
+            document.querySelectorAll('#questList .btn').forEach(btn => {
+                btn.disabled = false;
+                btn.innerText = "Claim";
+                btn.style.background = "#8B5CF6";
+                btn.style.color = "white";
             });
         }
 
-        setInterval(updateRadarTelemetry, 3000);
-        window.onload = updateRadarTelemetry;
+        function rollGacha() {
+            if (profile.gold < 100) {
+                document.getElementById('dropAlert').innerText = "⚠️ Gold resources insufficient to secure transmission.";
+                document.getElementById('dropAlert').style.color = "#EF4444";
+                return;
+            }
+
+            profile.gold -= 100;
+            
+            // Drop rate index rolling calculation engine
+            const roll = Math.random() * 100;
+            let chosenItem = itemPool[0];
+
+            if(roll <= 1) { chosenItem = itemPool.find(i => i.rarity === "Mythical"); }
+            else if(roll <= 15) { chosenItem = itemPool.filter(i => i.rarity === "Epic")[Math.floor(Math.random() * 2)]; }
+            else if(roll <= 40) { chosenItem = itemPool.filter(i => i.rarity === "Rare")[Math.floor(Math.random() * 2)]; }
+            else { chosenItem = itemPool.filter(i => i.rarity === "Common")[Math.floor(Math.random() * 2)]; }
+
+            profile.inventory.push(chosenItem);
+            
+            const alertText = document.getElementById('dropAlert');
+            alertText.innerText = `🎰 SUMMONED: ${chosenItem.name} [${chosenItem.rarity}]`;
+            
+            if(chosenItem.rarity === "Mythical") alertText.style.color = "#EF4444";
+            else if(chosenItem.rarity === "Epic") alertText.style.color = "#C084FC";
+            else if(chosenItem.rarity === "Rare") alertText.style.color = "#60A5FA";
+            else alertText.style.color = "#94A3B8";
+
+            syncEngineUI();
+        }
+
+        function renderInventory() {
+            const grid = document.getElementById('inventoryGrid');
+            grid.innerHTML = '';
+            if(profile.inventory.length === 0) {
+                grid.innerHTML = '<p style="color:#4B5563; font-size:12px; padding:5px;">Storage matrix vacant.</p>';
+                return;
+            }
+            profile.inventory.forEach(item => {
+                grid.innerHTML += `<div class="item-card rarity-${item.rarity}">${item.name}<div style="font-size:9px; margin-top:4px; opacity:0.6;">${item.rarity}</div></div>`;
+            });
+        }
+
+        window.onload = syncEngineUI;
     </script>
 </body>
 </html>
+
 
