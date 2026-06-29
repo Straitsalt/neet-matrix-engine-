@@ -4,161 +4,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neet Prep - Crack Your Goals</title>
+    <title>Squad Radar & Weather Hub</title>
     <style>
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #0B0F19; color: #E2E8F0; }
-        .hidden { display: none !important; }
-        .nav-bar { background: #111827; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1F2937; }
-        .btn { border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; transition: all 0.2s; }
-        .btn-primary { background: #2563EB; }
-        .btn-success { background: #10B981; }
-        .btn-accent { background: #8B5CF6; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #060814; color: #E2E8F0; }
+        .nav-bar { background: #0F1123; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #8B5CF6; box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+        .workspace { padding: 20px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        .card { background: #0F1123; padding: 20px; border-radius: 12px; border: 1px solid #1F2937; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        h3, h4 { margin-top: 0; color: #F1F5F9; letter-spacing: 0.5px; }
+        .neon-text-blue { color: #38BDF8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.4); }
+        .neon-text-purple { color: #A78BFA; text-shadow: 0 0 8px rgba(167, 139, 250, 0.4); }
+        .btn { border: none; padding: 12px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; transition: all 0.2s; }
+        .btn-primary { background: #2563EB; box-shadow: 0 0 10px rgba(37, 99, 235, 0.4); }
+        .btn-primary:hover { background: #1D4ED8; }
+        .btn-accent { background: #8B5CF6; box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
+        .btn-accent:hover { background: #7C3AED; }
         .btn-danger { background: #EF4444; }
-        .workspace-layout { padding: 20px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: #111827; padding: 20px; border-radius: 12px; border: 1px solid #1F2937; }
-        h4 { margin-top: 0; color: #F1F5F9; border-bottom: 1px solid #1F2937; padding-bottom: 10px; }
         .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        input, select, textarea { padding: 10px; background: #0B0F19; border: 1px solid #374151; color: white; border-radius: 8px; }
-        
-        /* Interactive Blueprint Box */
-        .blueprint-box { 
-            border: 2px solid #E2E8F0; background: #111827; max-width: 400px; margin: 20px auto; 
-            padding: 20px; border-radius: 8px; position: relative; text-align: left; cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .blueprint-box:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(255,255,255,0.1); }
-        .blueprint-title { font-size: 22px; font-weight: bold; border-bottom: 1px dashed #4B5563; padding-bottom: 5px; }
-        .features-badge { background: #2563EB; color: white; padding: 4px 8px; font-size: 11px; border-radius: 4px; display: inline-block; margin-top: 10px; font-weight: bold;}
-        .tagline { color: #A78BFA; font-style: italic; margin-top: 15px; font-size: 16px; }
-        .signature { text-align: right; color: #94A3B8; font-size: 13px; margin-top: 10px; }
-
-        /* Streak Element */
-        .streak-banner { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 18px; font-weight: bold; color: #F59E0B; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
-
-        .options-grid { display: flex; flex-direction: column; gap: 10px; }
-        .option-btn { background: #1F2937; border: 1px solid #374151; color: #E2E8F0; padding: 14px; border-radius: 8px; text-align: left; cursor: pointer; width: 100%; }
-        .option-btn.selected { border-color: #2563EB; background: rgba(37, 99, 235, 0.15); }
-        .option-btn.correct-reveal { border-color: #10B981; background: rgba(16, 185, 129, 0.2); color: #34D399; }
-        .option-btn.wrong-reveal { border-color: #EF4444; background: rgba(239, 68, 68, 0.15); color: #FCA5A5; }
-        
-        .tracker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
-        .subject-box { background: #1F2937; padding: 12px; border-radius: 8px; border: 1px solid #374151; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #1F2937; font-size: 13px; }
-        th { background: #1F2937; color: #94A3B8; }
-        
-        /* Split layout for Arena */
-        .arena-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .arena-layout { grid-template-columns: 3fr 2fr; } }
-
-        /* Shared Library Grid Layout */
-        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
-        .book-card { background: #1F2937; padding: 15px; border-radius: 8px; border: 1px solid #374151; display: flex; flex-direction: column; justify-content: space-between; }
-        .admin-ledger { background: #0B0F19; border: 1px solid #EF4444; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        input, select { padding: 12px; background: #060814; border: 1px solid #374151; color: white; border-radius: 8px; font-size: 14px; }
+        input:focus { border-color: #8B5CF6; outline: none; }
+        .radar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-top: 15px; }
+        .radar-card { background: #151833; padding: 16px; border-radius: 10px; border: 1px solid #2D3748; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+        .radar-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #38BDF8; }
+        .weather-badge { background: rgba(56, 189, 248, 0.15); color: #38BDF8; padding: 4px 8px; font-size: 12px; border-radius: 6px; font-weight: bold; display: inline-block; margin-top: 5px; }
+        .geo-box { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="workspace-layout" style="margin-top: 80px; max-width: 400px;">
-        <div class="card">
-            <h3 style="text-align: center; color: #38BDF8; margin-top: 0;">🔐 NEET PREP ENGINE</h3>
-            <div class="form-group"><label>Username</label><input type="text" id="authUser" placeholder="Enter username"></div>
-            <div class="form-group"><label>Password (Strong Required)</label><input type="password" id="authPass" placeholder="Enter password"></div>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="btn btn-primary" style="flex: 1;" onclick="handleAuth('login')">Log In</button>
-                <button class="btn btn-accent" style="flex: 1;" onclick="handleAuth('signup')">Sign Up</button>
-            </div>
-            <p id="authError" style="color: #EF4444; font-size: 12px; text-align: center; margin-top: 10px;"></p>
-        </div>
+    <div class="nav-bar">
+        <h2 style="margin:0; font-size:20px;" class="neon-text-purple">📡 SQUAD RADAR NODE</h2>
+        <span style="font-size: 12px; background: #1F2937; padding: 6px 12px; border-radius: 20px; border: 1px solid #374151;">Online Hub</span>
     </div>
 
-    <div id="appContainer" class="hidden">
-        <div class="nav-bar">
-            <h2 id="userGreeting" style="margin:0; font-size:18px; color:#38BDF8;">⚡ Neet Prep</h2>
-            <div>
-                <button class="btn btn-primary" onclick="switchView('homePage')">🏠 Home</button>
-                <button class="btn btn-success" onclick="switchView('practiceArena')">🚀 Arena</button>
-                <button class="btn btn-accent" onclick="switchView('libraryHub')">📚 Book Library</button>
-                <button class="btn btn-danger" style="padding: 6px 10px;" onclick="logout()">Logout</button>
+    <div class="workspace">
+        
+        <div class="card" style="border-color: #8B5CF6;">
+            <h3 class="neon-text-purple">📍 Core Geolocation Station</h3>
+            <p style="font-size: 13px; color: #94A3B8; margin: 0 0 15px 0;">Initialize your live satellite coordinate logs to compute distances to incoming squad targets.</p>
+            
+            <div class="geo-box">
+                <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                    <span>Latitude: <strong id="myLat" style="color:#A78BFA;">Not Loaded</strong></span>
+                    <span>Longitude: <strong id="myLng" style="color:#A78BFA;">Not Loaded</strong></span>
+                </div>
+                <div id="myWeatherDisplay" class="weather-badge style-block" style="display:none;">Loading Local Weather...</div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="getMyLocation()">⚡ Scan My GPS Coordinates</button>
+                <a id="mapLink" href="#" target="_blank" class="btn btn-accent" style="text-decoration: none; text-align: center; display: none;">🗺️ Open Maps View</a>
             </div>
         </div>
 
-        <div class="workspace-layout">
-            
-            <div id="homePage" class="view-panel">
-                <div class="streak-banner">
-                    <span>🔥 Daily Study Streak:</span>
-                    <span id="streakCount">1 Day</span>
+        <div class="card" style="border-color: #1F2937;">
+            <h3 class="neon-text-blue">➕ Register Friend Coordinates</h3>
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: end;">
+                <div class="form-group">
+                    <label style="font-size: 12px; color: #94A3B8;">Friend Name</label>
+                    <input type="text" id="friendName" placeholder="e.g., Rohan">
                 </div>
-                
-                <div class="blueprint-box" onclick="revealFeatures()">
-                    <div class="blueprint-title">Neet</div>
-                    <div>homepage, <span class="features-badge">👉 Click Features</span></div>
-                    <div class="tagline">crack your goals</div>
-                    <div class="signature">~Piyush</div>
+                <div class="form-group">
+                    <label style="font-size: 12px; color: #94A3B8;">Target Lat</label>
+                    <input type="number" id="friendLat" step="0.0001" placeholder="18.4085">
                 </div>
-
-                <div id="featuresModule" class="hidden">
-                    <div class="card" style="margin-bottom: 20px; border-color: #3B82F6;">
-                        <h4>📋 1) Syllabus Tracker Breakdown</h4>
-                        <div class="tracker-grid">
-                            <div class="subject-box" style="border-top: 4px solid #38BDF8;">
-                                <span style="color:#38BDF8; font-weight:bold;">Phy</span>
-                                <h2 style="margin: 5px 0 0 0; font-size:20px;">30 Chaps</h2>
-                            </div>
-                            <div class="subject-box" style="border-top: 4px solid #F59E0B;">
-                                <span style="color:#F59E0B; font-weight:bold;">Che</span>
-                                <h2 style="margin: 5px 0 0 0; font-size:20px;">30 Chaps</h2>
-                            </div>
-                            <div class="subject-box" style="border-top: 4px solid #10B981;">
-                                <span style="color:#10B981; font-weight:bold;">Bio</span>
-                                <h2 style="margin: 5px 0 0 0; font-size:20px;">32 Chaps</h2>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card" style="border-color: #10B981;">
-                        <h4>📊 3) Performance History Statistics Log</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Section</th>
-                                    <th>Total Solved</th>
-                                    <th>Correct</th>
-                                    <th>Accuracy</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="historyLogRows"></tbody>
-                        </table>
-                    </div>
+                <div class="form-group">
+                    <label style="font-size: 12px; color: #94A3B8;">Target Lng</label>
+                    <input type="number" id="friendLng" step="0.0001" placeholder="76.5604">
                 </div>
             </div>
+            <button class="btn btn-accent" style="width: 100%; margin-top: 15px;" onclick="addFriendNode()">📡 Add Target to Radar</button>
+        </div>
 
-            <div id="practiceArena" class="view-panel hidden">
-                <div class="card" id="filterDeck">
-                    <h4>🎯 Session Setup parameters</h4>
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <select id="runSubject" style="flex:1;"><option>Physics</option><option>Chemistry</option><option>Biology</option></select>
-                    </div>
-                    <button class="btn btn-success" style="width: 100%;" onclick="startPracticeSession()">⚡ Launch Test Arena</button>
+        <div class="card">
+            <h3 class="neon-text-blue">🌐 Active Squad Radar Grid</h3>
+            <div id="radarGrid" class="radar-grid">
                 </div>
+        </div>
 
-                <div class="arena-layout hidden" id="arenaBox">
-                    <div class="card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <span id="arenaMeta" style="color:#38BDF8; font-weight:bold;">Physics</span>
+    </div>
+
+    <script>
+        // Internal Memory Vault for tracking coordinates
+        let myCoordinates = { lat: null, lng: null };
+        let squadList = JSON.parse(localStorage.getItem('radar_squad_db')) || [
+            { name: "Sample Target (Mumbai)", lat: 19.0760, lng: 72.8777 },
+            { name: "Sample Target (Pune)", lat: 18.5204, lng: 73.8567 }
+        ];
+
+        // Core Step 1: Query Browser Geolocation GPS Pipeline
+        function getMyLocation() {
+            if (!navigator.geolocation) {
+                alert("Your device browser blockaded GPS coordinates fetching updates.");
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(position => {
+                myCoordinates.lat = position.coords.latitude;
+                myCoordinates.lng = position.coords.longitude;
+                
+                document.getElementById('myLat').innerText = myCoordinates.lat.toFixed(4);
+                document.getElementById('myLng').innerText = myCoordinates.lng.toFixed(4);
+                
+                // Show dynamic map navigation anchor link
+                const mapBtn = document.getElementById('mapLink');
+                mapBtn.href = `https://www.google.com/maps?q=${myCoordinates.lat},${myCoordinates.lng}`;
+                mapBtn.style.display = "block";
+                
+                // Pull active weather parameters based on real position
+                fetchSimulatedWeather('myWeatherDisplay', myCoordinates.lat);
+                
+                // Recalculate range intervals for standard grid array
+                renderRadar();
+            }, () => {
+                alert("Failed to capture location coordinates. Please enable site permissions.");
+            });
+        }
+
+        // Core Step 2: Formulate Math Distance Vectors (Haversine Formula)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            if (!lat1 || !lon1) return "Unknown (Scan GPS)";
+            const R = 6371; // Earth's Radius line vector parameter in Kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c;
+            return `${distance.toFixed(1)} km away`;
+        }
+
+        // Core Step 3: Fetch Weather Parameters Loop
+        function fetchSimulatedWeather(elementId, seedLat) {
+            const element = document.getElementById(elementId);
+            element.style.display = "inline-block";
+            
+            // Simulating real dynamic feeds based on coordinate inputs safely
+            const baselineTemp = 28 + Math.floor((seedLat % 1) * 10);
+            const weatherConditions = ["Clear Skies ☀️", "Passing Clouds ⛅", "Scattered Showers 🌧️", "Overcast ☁️"];
+            const chosenCondition = weatherConditions[Math.floor(Math.abs(seedLat) % weatherConditions.length)];
+            
+            element.innerText = `🌤️ Weather: ${baselineTemp}°C | ${chosenCondition}`;
+        }
+
+        // Core Step 4: Inject & Retain Target Elements
+        function addFriendNode() {
+            const name = document.getElementById('friendName').value.trim();
+            const lat = parseFloat(document.getElementById('friendLat').value);
+            const lng = parseFloat(document.getElementById('friendLng').value);
+            
+            if (!name || isNaN(lat) || isNaN(lng)) {
+                alert("Please fill out complete positioning fields accurately.");
+                return;
+            }
+            
+            squadList.push({ name: name, lat: lat, lng: lng });
+            localStorage.setItem('radar_squad_db', JSON.stringify(squadList));
+            
+            // Clear input fields
+            document.getElementById('friendName').value = '';
+            document.getElementById('friendLat').value = '';
+            document.getElementById('friendLng').value = '';
+            
+            renderRadar();
+        }
+
+        function removeFriendNode(idx) {
+            squadList.splice(idx, 1);
+            localStorage.setItem('radar_squad_db', JSON.stringify(squadList));
+            renderRadar();
+        }
+
+        // Render Panel Items Interface Loop
+        function renderRadar() {
+            const grid = document.getElementById('radarGrid');
+            grid.innerHTML = '';
+            
+            if(squadList.length === 0) {
+                grid.innerHTML = '<p style="color:#64748B; font-size:13px; padding:10px;">Radar scope clear. No squadron tracked.</p>';
+                return;
+            }
+            
+            squadList.forEach((friend, idx) => {
+                const distanceText = calculateDistance(myCoordinates.lat, myCoordinates.lng, friend.lat, friend.lng);
+                const weatherUniqueId = `weather-friend-${idx}`;
+                
+                grid.innerHTML += `
+                    <div class="radar-card">
+                        <div>
+                            <h4 style="margin:0 0 6px 0; color:#38BDF8;">👤 ${friend.name}</h4>
+                            <p style="font-size:12px; color:#A78BFA; margin:4px 0; font-weight:bold;">🛰️ ${distanceText}</p>
+                            <p style="font-size:11px; color:#64748B; margin:0;">Position: ${friend.lat.toFixed(3)}, ${friend.lng.toFixed(3)}</p>
+                            <div id="${weatherUniqueId}" class="weather-badge">Syncing target weather...</div>
                         </div>
-                        <p id="arenaQuestionText" style="font-size:16px; font-weight:500; margin-bottom:20px;"></p>
-                        <div class="options-grid">
-                            <button id="optBtnA" class="option-btn" onclick="selectOption('A')"></button>
-                            <button id="optBtnB" class="option-btn" onclick="selectOption('B')"></button>
-                            <button id="optBtnC" class="option-btn" onclick="selectOption('C')"></button>
-                            <button id="optBtnD" class="option-btn" onclick="selectOption('D')"></button>
+                        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <a href="https://www.google.com/maps?q=${friend.lat},${friend.lng}" target="_blank" style="font-size:11px; color:#38BDF8; text-decoration:none; font-weight:bold;">Track Path ➔</a>
+                            <button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="removeFriendNode(${idx})">Drop</button>
                         </div>
-                        <button id="actionBtn" class="btn btn-primary" style="margin-top:20px; width:100%;" onclick="handleActionClick()">Check Answer</button>
                     </div>
+                `;
+                
+                // Fire dynamic weather calculation sequence for each array card node
+                setTimeout(() => {
+                    fetchSimulatedWeather(weatherUniqueId, friend.lat);
+                }, 50);
+            });
+        }
 
-                    <div class="card" style="display: flex; flex-direction: column;">
-                        <h4 style="color: #F59E0B; border-color: rgba(245, 158, 11,
+        // Initialize display configuration state elements instantly
+        window.onload = renderRadar;
+    </script>
+</body>
+</html>
