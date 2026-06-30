@@ -3,56 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Calorie Counter</title>
-
-    <link rel="stylesheet" href="style.css">
+    <title>AI Student Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="js/script.js"></script>
 </head>
 <body>
 
-<div class="container">
+<header>
+    <div class="logo">
+        <h1>🎓 AI Student Hub</h1>
+    </div>
 
-    <h1>🍎 AI Calorie Counter</h1>
+    <nav>
+        <a href="#">Home</a>
+        <a href="notes.html">Notes</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="planner.html">Planner</a>
+        <a href="timer.html">Timer</a>
+        <a href="progress.html">Progress</a>
+        <a href="chatbot.html">AI Chat</a>
+    </nav>
+</header>
 
+<section class="hero">
+    <h2>Learn Smarter with AI</h2>
     <p>
-        Upload a food image and let AI estimate its calories.
+        Organize your studies, take quizzes, chat with AI,
+        and track your daily progress.
     </p>
 
-    <input
-        type="file"
-        id="imageInput"
-        accept="image/*"
-    >
+    <button onclick="startApp()">Get Started</button>
+</section>
 
-    <img
-        id="preview"
-        alt="Food Preview"
-    >
+<section class="features">
 
-    <button onclick="analyzeFood()">
-        🤖 Analyze Food
-    </button>
-
-    <div
-        id="loading"
-        class="loading"
-    >
-        ⏳ Analyzing image...
+    <div class="card">
+        <h3>📝 Notes</h3>
+        <p>Create and save study notes.</p>
     </div>
 
-    <div
-        id="result"
-        class="result"
-    >
-        <!-- AI Result Appears Here -->
+    <div class="card">
+        <h3>🤖 AI Chat</h3>
+        <p>Ask study questions anytime.</p>
     </div>
 
-    <footer>
-        Made with ❤️ using HTML, CSS & JavaScript
-    </footer>
+    <div class="card">
+        <h3>📚 Quiz</h3>
+        <p>Practice chapter-wise quizzes.</p>
+    </div>
 
-</div>
+    <div class="card">
+        <h3>📅 Planner</h3>
+        <p>Plan your daily study schedule.</p>
+    </div>
 
-<script src="script.js"></script>
+    <div class="card">
+        <h3>⏱ Pomodoro Timer</h3>
+        <p>Stay focused with study sessions.</p>
+    </div>
+
+    <div class="card">
+        <h3>📈 Progress</h3>
+        <p>Monitor your learning journey.</p>
+    </div>
+
+</section>
+
+<footer>
+    <p>© 2026 AI Student Hub | Made with ❤️ for Students</p>
+</footer>
 
 </body>
 </html>
