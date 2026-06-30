@@ -1,83 +1,98 @@
-// Select HTML elements
-const imageInput = document.getElementById("imageInput");
-const preview = document.getElementById("preview");
-const result = document.getElementById("result");
-const loading = document.getElementById("loading");
+// Welcome Message
+window.onload = function () {
+    alert("🎓 Welcome to AI Student Hub!");
+};
 
-// Preview uploaded image
-imageInput.addEventListener("change", () => {
-    const file = imageInput.files[0];
+// Get Started Button
+function startApp() {
+    alert("🚀 Welcome! Start exploring your study dashboard.");
+}
 
-    if (!file) return;
+// -----------------------------
+// Dark Mode
+// -----------------------------
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
 
-    preview.src = URL.createObjectURL(file);
-    preview.style.display = "block";
+    if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+    } else {
+        localStorage.setItem("theme", "light");
+    }
+}
+
+window.addEventListener("load", () => {
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+    }
 });
 
-// Analyze button
-async function analyzeFood() {
+// -----------------------------
+// Notes
+// -----------------------------
+function saveNotes() {
 
-    const file = imageInput.files[0];
+    const notes = document.getElementById("notes");
 
-    if (!file) {
-        alert("Please select a food image.");
-        return;
+    if (!notes) return;
+
+    localStorage.setItem("studentNotes", notes.value);
+
+    alert("✅ Notes Saved!");
+}
+
+window.addEventListener("load", () => {
+
+    const notes = document.getElementById("notes");
+
+    if (notes) {
+        notes.value = localStorage.getItem("studentNotes") || "";
     }
 
-    loading.style.display = "block";
-    result.style.display = "none";
+});
 
-    const formData = new FormData();
-    formData.append("image", file);
+// -----------------------------
+// Pomodoro Timer
+// -----------------------------
+let time = 25 * 60;
+let timer;
 
-    try {
+function startTimer() {
 
-        const response = await fetch("/api/analyze", {
-            method: "POST",
-            body: formData
-        });
+    clearInterval(timer);
 
-        const data = await response.json();
+    timer = setInterval(() => {
 
-        loading.style.display = "none";
-        result.style.display = "block";
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
 
-        result.innerHTML = `
-            <h2>🍽 AI Analysis</h2>
+        const display = document.getElementById("timer");
 
-            <div class="card">
-                <strong>Food:</strong> ${data.food}
-            </div>
+        if (display) {
+            display.innerText =
+                `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+        }
 
-            <div class="card">
-                🔥 Calories: ${data.calories} kcal
-            </div>
+        if (time <= 0) {
+            clearInterval(timer);
+            alert("🎉 Study session complete!");
+        }
 
-            <div class="card">
-                💪 Protein: ${data.protein} g
-            </div>
+        time--;
 
-            <div class="card">
-                🍞 Carbs: ${data.carbs} g
-            </div>
+    },1000);
 
-            <div class="card">
-                🧈 Fat: ${data.fat} g
-            </div>
+}
 
-            <div class="card">
-                🎯 Confidence: ${data.confidence}%
-            </div>
-        `;
+// -----------------------------
+// Progress Bar
+// -----------------------------
+function updateProgress(value){
 
-    } catch (error) {
+    const progress = document.getElementById("progress");
 
-        loading.style.display = "none";
-
-        alert("Unable to analyze image.");
-
-        console.error(error);
-
+    if(progress){
+        progress.value = value;
     }
 
 }
