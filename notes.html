@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Notes</title>
 
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>📝 Study Notes</h1>
+
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="planner.html">Planner</a>
+        <a href="timer.html">Timer</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h2>Write Your Notes</h2>
+
+    <textarea
+        id="notes"
+        rows="15"
+        placeholder="Write your study notes here..."
+    ></textarea>
+
+    <br><br>
+
+    <button onclick="saveNotes()">
+        💾 Save Notes
+    </button>
+
+</div>
+
+<script src="js/notes.js"></script>
+
+</body>
+</html>
