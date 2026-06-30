@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Progress</title>
 
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>📊 Study Progress</h1>
+
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="notes.html">Notes</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="planner.html">Planner</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h2>Your Progress</h2>
+
+    <p>Notes Saved</p>
+    <progress id="notesProgress" value="0" max="100"></progress>
+
+    <br><br>
+
+    <p>Quiz Score</p>
+    <progress id="quizProgress" value="0" max="100"></progress>
+
+    <br><br>
+
+    <p>Tasks Completed</p>
+    <progress id="taskProgress" value="0" max="100"></progress>
+
+    <br><br>
+
+    <button onclick="loadProgress()">Refresh Progress</button>
+
+</div>
+
+<script>
+function loadProgress() {
+
+    const notes = localStorage.getItem("studyNotes");
+
+    document.getElementById("notesProgress").value =
+        notes && notes.length > 0 ? 100 : 0;
+
+    document.getElementById("quizProgress").value = 80;
+
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    document.getElementById("taskProgress").value =
+        Math.min(tasks.length * 20, 100);
+}
+
+loadProgress();
+</script>
+
+</body>
+</html>
