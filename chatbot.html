@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Chat</title>
 
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>🤖 AI Study Assistant</h1>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="notes.html">Notes</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="planner.html">Planner</a>
+        <a href="progress.html">Progress</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <div id="chatBox"
+         style="height:300px;overflow-y:auto;border:1px solid #ddd;padding:15px;border-radius:10px;margin-bottom:15px;">
+        <p><b>AI:</b> Hello! Ask me a study question.</p>
+    </div>
+
+    <input
+        type="text"
+        id="userInput"
+        placeholder="Type your question..."
+    >
+
+    <br><br>
+
+    <button onclick="sendMessage()">Send</button>
+
+</div>
+
+<script src="js/chatbot.js"></script>
+
+</body>
+</html>
