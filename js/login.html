@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - AI Student Hub</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h1>🎓 AI Student Hub</h1>
+
+<h2>Login</h2>
+
+<input type="text" id="username" placeholder="Username">
+
+<br><br>
+
+<input type="password" id="password" placeholder="Password">
+
+<br><br>
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<script>
+function login(){
+
+const username=document.getElementById("username").value;
+const password=document.getElementById("password").value;
+
+if(username==="student" && password==="1234"){
+
+alert("Login Successful!");
+
+window.location.href="index.html";
+
+}
+else{
+
+alert("Invalid Username or Password");
+
+}
+
+}
+</script>
+
+</body>
+</html>
